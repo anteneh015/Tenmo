@@ -34,13 +34,15 @@ private static final String API_BASE_URL = "http://localhost:8080/";
     }
 
     public App(ConsoleService console, AuthenticationService authenticationService) {
-		this.console = console;
+
+    	this.console = console;
 		this.authenticationService = authenticationService;
 	}
 
 	public void run() {
 		console.showWelcomeBanner();
 		registerAndLogin();
+		this.tenmo = new TenmoService(API_BASE_URL, this.currentUser);
 		mainMenu();
 	}
 
@@ -68,7 +70,8 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 
 	private void viewCurrentBalance() {
 		// TODO Auto-generated method stub
-		tenmo.getAccountBalance();
+		console.printOutBalance(tenmo.getAccountBalance());
+
 	}
 
 	private void viewTransferHistory() {

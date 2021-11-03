@@ -19,7 +19,7 @@ public class AccountsController {
         this.accountsDAO = accountsDAO;
     }
 
-    @RequestMapping(path = "accounts/", method = RequestMethod.GET)
+    @RequestMapping(path = "accounts", method = RequestMethod.GET)
     public double getAccountBalance(Principal principal) {
         return accountsDAO.returnAccountBalance(principal.getName());
     }

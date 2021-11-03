@@ -20,7 +20,9 @@ public class TenmoService {
     public double getAccountBalance() {
         HttpEntity entity = new HttpEntity<>(makeAuthHeader());
         String url = this.baseUrl + "accounts";
-        double balance = restTemplate.exchange(url, HttpMethod.POST, entity, double.class).getBody();
+
+           double balance = restTemplate.exchange(url, HttpMethod.GET, entity, double.class).getBody();
+
         return balance;
     }
 

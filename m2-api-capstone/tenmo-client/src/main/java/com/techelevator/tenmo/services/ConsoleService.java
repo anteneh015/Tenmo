@@ -97,4 +97,10 @@ public class ConsoleService {
 		} while(result == null);
 		return result;
 	}
+
+	public void printOutBalance(double viewBalance){
+		System.out.println("$" + viewBalance);
+	}
+
+
 }
