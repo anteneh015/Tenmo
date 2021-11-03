@@ -24,5 +24,51 @@ public class JdbcAccountsDAO implements AccountsDAO{
         }
         return accounts.getBalance();
     }
+    @Override
+    public Accounts getsAccountsByUsername(String username){
+        String sql = "SELECT account_id, balance, username, users.user_id AS user_id " +
+                "FROM accounts JOIN users ON accounts.user_id = users.user_id WHERE username = ?";
+        SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, username);
+        if (rows.next()){
+            Accounts accounts = mapRowToAccounts(rows);
+            return accounts;
+        }
+        return null;
+    }
 
+    @Override
+    public void transferMoney(String usernameFrom, String usernameTo, double transferAmount) {
+        Accounts accountsFrom = getsAccountsByUsername(usernameFrom);
+        Accounts accountsTo = getsAccountsByUsername(usernameTo);
+        if (accountsFrom.getBalance() >= transferAmount) {
+            withdrawForTransfer(accountsFrom.getBalance(), transferAmount, accountsFrom.getUserId());
+            depositForTransfer(accountsTo.getBalance(), transferAmount, accountsTo.getUserId());
+        } else {
+            System.out.println("Insufficient Funds");
+        }
+    }
+
+    @Override
+    public void withdrawForTransfer (double balance, double transferAmount, Long userId){
+        String sql = "UPDATE accounts SET balance = ?  WHERE user_id = ?";
+        jdbcTemplate.update(sql, balance - transferAmount, userId);
+
+    }
+
+    @Override
+    public void depositForTransfer ( double balance, double transferAmount, Long userId){
+        String sql = "UPDATE accounts SET balance = ?  WHERE user_id = ?";
+        jdbcTemplate.update(sql, balance + transferAmount, userId);
+    }
+
+    private Accounts mapRowToAccounts(SqlRowSet row){
+        Accounts accounts = new Accounts();
+
+        accounts.setBalance(row.getDouble("balance"));
+        accounts.setAccountId(row.getLong("account_id"));
+        accounts.setUserId(row.getLong("user_id"));
+        accounts.setUsername(row.getString("username"));
+
+        return accounts;
+    }
 }
