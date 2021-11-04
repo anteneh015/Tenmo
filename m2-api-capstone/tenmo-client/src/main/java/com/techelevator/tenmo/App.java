@@ -86,30 +86,54 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 
 	private void sendBucks() {
 		// TODO Auto-generated method stub
-		String[] usernames = tenmo.getUsernames();
-		console.displayUsernames(usernames);
-		getUsernameToTransferTo(usernames);
-		String userInput = console.getUserInput("How much would you like to transfer?");
-		double userInputAsInt = Double.parseDouble(userInput);
+
+		while (true){
+			String[] usernames = tenmo.getUsernames();
+
+			console.displayUsernames(usernames);
+			String getUsernameTransfer = getUsernameToTransferTo(usernames);
+
+			if(getUsernameTransfer.equals("0")){
+				break;
+			}
+		getAmountToTransfer();
 	}
 
-	private void getUsernameToTransferTo(String[] usernames) {
+	}
+
+	private double getAmountToTransfer(){
+
+		String userInput = console.getUserInput("How much would you like to transfer?");
+		double userInputAsDouble = Double.parseDouble(userInput);
+
+		while(true){
+		if(userInputAsDouble > 0){
+			return userInputAsDouble;
+		}else{
+			console.enterValidAmount();
+			userInput = console.getUserInput("How much would you like to transfer?");
+			userInputAsDouble = Double.parseDouble(userInput);
+		}
+	}
+
+	}
+
+	private String getUsernameToTransferTo(String[] usernames) {
 		while (true) {
 			String userInput = console.getUserInput("Enter username of user you are sending to (0 to cancel)");
-			if (userInput.equals("0")) {
-				break;
-			} else {
+
 				for (int i = 0; i < usernames.length; i++) {
-					if (userInput.equals(usernames[i])) {
-						System.out.println("run our transfer methods");
-						break;
+					if (userInput.equals(usernames[i]) || userInput.equals("0")) {
+						return userInput;
+
 					} else if (i == (usernames.length - 1) && !userInput.equals(usernames[i])){
-						console.usernameNotFound();
+						 console.usernameNotFound();
+
 					}
 				}
 			}
 		}
-	}
+
 
 	private void requestBucks() {
 		// TODO Auto-generated method stub

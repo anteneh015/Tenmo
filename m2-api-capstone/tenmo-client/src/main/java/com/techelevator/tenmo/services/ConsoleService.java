@@ -120,4 +120,7 @@ public class ConsoleService {
 		System.out.println("Username not found, please enter a valid one");
 	}
 
+	public void enterValidAmount(){
+		System.out.println("Please enter a valid amount");
+	}
 }

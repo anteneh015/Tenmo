@@ -66,7 +66,6 @@ public class AccountsController {
         } else if(transfer_status_id == 1) {
             return transfersDAO.getCurrentTransfersFromUserId(accounts.getAccountId());
         }
-//        return HttpStatus.NO_CONTENT;
         return null;
     }
 

@@ -51,30 +51,13 @@ public class JdbcAccountsDAO implements AccountsDAO{
         return accountsList;
     }
 
-    @Override
-    public void transferMoney(String usernameFrom, String usernameTo, double transferAmount) {
-        Accounts accountsFrom = getsAccountsByUsername(usernameFrom);
-        Accounts accountsTo = getsAccountsByUsername(usernameTo);
-        if (accountsFrom.getBalance() >= transferAmount) {
-            withdrawForTransfer(accountsFrom.getBalance(), transferAmount, accountsFrom.getUserId());
-            depositForTransfer(accountsTo.getBalance(), transferAmount, accountsTo.getUserId());
-        } else {
-            System.out.println("Insufficient Funds");
-        }
-    }
 
-    @Override
-    public void withdrawForTransfer (double balance, double transferAmount, int userId){
-        String sql = "UPDATE accounts SET balance = ?  WHERE user_id = ?";
-        jdbcTemplate.update(sql, balance - transferAmount, userId);
 
-    }
 
-    @Override
-    public void depositForTransfer (double balance, double transferAmount, int userId){
-        String sql = "UPDATE accounts SET balance = ?  WHERE user_id = ?";
-        jdbcTemplate.update(sql, balance + transferAmount, userId);
-    }
+
+
+
+
 
     private Accounts mapRowToAccounts(SqlRowSet row){
         Accounts accounts = new Accounts();

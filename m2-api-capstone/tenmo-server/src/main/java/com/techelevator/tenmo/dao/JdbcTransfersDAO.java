@@ -1,15 +1,18 @@
 package com.techelevator.tenmo.dao;
 
+import com.techelevator.tenmo.model.Accounts;
 import com.techelevator.tenmo.model.Transfers;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class JdbcTransfersDAO implements TransfersDAO{
+    private AccountsDAO accountsDAO;
 
     private JdbcTemplate jdbcTemplate;
 
@@ -51,6 +54,30 @@ public class JdbcTransfersDAO implements TransfersDAO{
             transfersList.add(mapRowToTransfers(rows));
         }
         return transfersList;
+    }
+
+    @Transactional
+    @Override
+    public void transferMoney(String usernameFrom, String usernameTo,  double transferAmount) {
+        Accounts accountFrom = accountsDAO.getsAccountsByUsername(usernameFrom);
+        Accounts accountTo = accountsDAO.getsAccountsByUsername(usernameTo);
+
+            withdrawForTransfer(accountFrom.getBalance(), transferAmount, accountFrom.getUserId());
+            depositForTransfer(accountTo.getBalance(), transferAmount, accountTo.getUserId());
+
+
+    }
+
+    @Override
+    public void withdrawForTransfer (double balance, double transferAmount, int accountId) {
+        String sql = "UPDATE accounts SET balance = ?  WHERE account_from = ?";
+        jdbcTemplate.update(sql, balance - transferAmount, accountId);
+    }
+
+    @Override
+    public void depositForTransfer (double balance, double transferAmount, int accountId){
+        String sql = "UPDATE accounts SET balance = ?  WHERE account_to = ?";
+        jdbcTemplate.update(sql, balance + transferAmount, accountId);
     }
 
     private Transfers mapRowToTransfers(SqlRowSet row) {
