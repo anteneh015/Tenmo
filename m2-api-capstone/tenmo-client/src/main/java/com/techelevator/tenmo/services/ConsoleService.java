@@ -4,7 +4,9 @@ package com.techelevator.tenmo.services;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Scanner;
+import java.util.concurrent.atomic.DoubleAccumulator;
 
 public class ConsoleService {
 
@@ -38,6 +40,10 @@ public class ConsoleService {
 		out.println("LOGIN ERROR: "+message);
 		out.println("Please attempt to login again.");
 		out.flush();
+	}
+
+	public void printError(String errorMessage) {
+		System.err.println(errorMessage);
 	}
 
 	public Object getChoiceFromOptions(Object[] options) {
@@ -102,5 +108,16 @@ public class ConsoleService {
 		System.out.println("$" + viewBalance);
 	}
 
+	public void displayUsernames(String[] usernameArray) {
+		System.out.println("Select a user to send money to");
+		System.out.println("------------------------------------");
+		for (String eachString : usernameArray) {
+			System.out.println(eachString);
+		}
+	}
+
+	public void usernameNotFound() {
+		System.out.println("Username not found, please enter a valid one");
+	}
 
 }

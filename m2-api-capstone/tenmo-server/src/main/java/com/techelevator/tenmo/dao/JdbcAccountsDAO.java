@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Accounts;
+import com.techelevator.tenmo.model.Users;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -37,17 +38,6 @@ public class JdbcAccountsDAO implements AccountsDAO{
             return accounts;
         }
         return null;
-    }
-
-    @Override
-    public List<String> getAllUsernames() {
-        List<String> usernameList = new ArrayList<String>();
-        String sql = "SELECT username FROM users";
-        SqlRowSet rows = jdbcTemplate.queryForRowSet(sql);
-        while (rows.next()) {
-            usernameList.add(rows.getString("username"));
-        }
-        return usernameList;
     }
 
     @Override

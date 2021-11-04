@@ -11,7 +11,6 @@ public interface AccountsDAO {
     public void transferMoney(String usernameFrom, String usernameTo, double transferAmount);
     public void withdrawForTransfer (double balance, double transferAmount, Long userId);
     public void depositForTransfer ( double balance, double transferAmount, Long userId);
-    public List<String> getAllUsernames();
 
 
 }
