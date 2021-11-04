@@ -2,7 +2,7 @@ package com.techelevator.tenmo.model;
 
 public class Users {
     private String username;
-    private long userId;
+    private int userId;
 
     public String getUsername() {
         return username;
@@ -12,11 +12,11 @@ public class Users {
         this.username = username;
     }
 
-    public long getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 }

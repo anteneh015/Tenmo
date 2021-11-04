@@ -25,7 +25,7 @@ public class JdbcUsersDAO implements UsersDAO{
         SqlRowSet rows = jdbcTemplate.queryForRowSet(sql);
         while (rows.next()) {
             Users users = new Users();
-            users.setUserId(rows.getLong("user_id"));
+            users.setUserId(rows.getInt("user_id"));
             users.setUsername(rows.getString("username"));
             usersList.add(users);
         }

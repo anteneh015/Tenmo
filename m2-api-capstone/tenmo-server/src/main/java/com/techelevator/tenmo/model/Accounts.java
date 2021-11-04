@@ -4,8 +4,8 @@ public class Accounts {
     //account_id, user_id, balance
 
     private double balance;
-    private long accountId;
-    private long userId;
+    private int accountId;
+    private int userId;
     private String username;
 
     public String getUsername() {
@@ -24,19 +24,19 @@ public class Accounts {
         this.balance = balance;
     }
 
-    public long getAccountId() {
+    public int getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(long accountId) {
+    public void setAccountId(int accountId) {
         this.accountId = accountId;
     }
 
-    public long getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 }

@@ -1,7 +1,6 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Accounts;
-import com.techelevator.tenmo.model.Users;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -41,6 +40,18 @@ public class JdbcAccountsDAO implements AccountsDAO{
     }
 
     @Override
+    public List<Accounts> getAccountsList() {
+        List<Accounts> accountsList = new ArrayList<Accounts>();
+        String sql = "SELECT account_id, balance, username, users.user_id AS user_id " +
+                "FROM accounts JOIN users ON accounts.user_id = users.user_id";
+        SqlRowSet rows = jdbcTemplate.queryForRowSet(sql);
+        while (rows.next()) {
+            accountsList.add(mapRowToAccounts(rows));
+        }
+        return accountsList;
+    }
+
+    @Override
     public void transferMoney(String usernameFrom, String usernameTo, double transferAmount) {
         Accounts accountsFrom = getsAccountsByUsername(usernameFrom);
         Accounts accountsTo = getsAccountsByUsername(usernameTo);
@@ -53,14 +64,14 @@ public class JdbcAccountsDAO implements AccountsDAO{
     }
 
     @Override
-    public void withdrawForTransfer (double balance, double transferAmount, Long userId){
+    public void withdrawForTransfer (double balance, double transferAmount, int userId){
         String sql = "UPDATE accounts SET balance = ?  WHERE user_id = ?";
         jdbcTemplate.update(sql, balance - transferAmount, userId);
 
     }
 
     @Override
-    public void depositForTransfer ( double balance, double transferAmount, Long userId){
+    public void depositForTransfer (double balance, double transferAmount, int userId){
         String sql = "UPDATE accounts SET balance = ?  WHERE user_id = ?";
         jdbcTemplate.update(sql, balance + transferAmount, userId);
     }
@@ -69,8 +80,8 @@ public class JdbcAccountsDAO implements AccountsDAO{
         Accounts accounts = new Accounts();
 
         accounts.setBalance(row.getDouble("balance"));
-        accounts.setAccountId(row.getLong("account_id"));
-        accounts.setUserId(row.getLong("user_id"));
+        accounts.setAccountId(row.getInt("account_id"));
+        accounts.setUserId(row.getInt("user_id"));
         accounts.setUsername(row.getString("username"));
 
         return accounts;
