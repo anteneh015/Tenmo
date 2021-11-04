@@ -5,6 +5,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class JdbcAccountsDAO implements AccountsDAO{
 
@@ -34,6 +37,17 @@ public class JdbcAccountsDAO implements AccountsDAO{
             return accounts;
         }
         return null;
+    }
+
+    @Override
+    public List<String> getAllUsernames() {
+        List<String> usernameList = new ArrayList<String>();
+        String sql = "SELECT username FROM users";
+        SqlRowSet rows = jdbcTemplate.queryForRowSet(sql);
+        while (rows.next()) {
+            usernameList.add(rows.getString("username"));
+        }
+        return usernameList;
     }
 
     @Override

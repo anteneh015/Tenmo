@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.controller;
 
 import com.techelevator.tenmo.dao.AccountsDAO;
+import com.techelevator.tenmo.model.Accounts;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,8 +21,15 @@ public class AccountsController {
     }
 
     @RequestMapping(path = "accounts", method = RequestMethod.GET)
+    public Accounts displayAccount(Principal principal) {
+        return accountsDAO.getsAccountsByUsername(principal.getName());
+    }
+
+    @RequestMapping(path = "accounts/balance", method = RequestMethod.GET)
     public double getAccountBalance(Principal principal) {
         return accountsDAO.returnAccountBalance(principal.getName());
     }
+
+//    @RequestMapping(path = "")
 
 }
