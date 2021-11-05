@@ -28,9 +28,16 @@ public class AccountsController {
         this.transfersDAO = transfersDAO;
     }
 
+//    @RequestMapping(path = "accounts", method = RequestMethod.GET)
+//    public Accounts displayAccount(Principal principal) {
+//        return accountsDAO.getsAccountsByUsername(principal.getName());
+//    }
+
     @RequestMapping(path = "accounts", method = RequestMethod.GET)
-    public Accounts displayAccount(Principal principal) {
-        return accountsDAO.getsAccountsByUsername(principal.getName());
+    public List<Accounts> displayAccounts() {
+        List<Accounts> accountsList = new ArrayList<Accounts>();
+        accountsList = accountsDAO.getAccountsList();
+        return accountsList;
     }
 
     @RequestMapping(path = "accounts/balance", method = RequestMethod.GET)
@@ -50,6 +57,17 @@ public class AccountsController {
         List<String> usernameList = new ArrayList<String>();
         usernameList = usersDAO.getAllUsernames();
         return usernameList;
+    }
+
+    @RequestMapping(path = "users/{username}/accountId", method = RequestMethod.GET)
+    public int getAccountId(@PathVariable String username) {
+        int accountId = usersDAO.getAccountIdFromUsername(username);
+        return accountId;
+    }
+
+    @RequestMapping(path = "accounts", method = RequestMethod.PUT)
+    public void update(Accounts accountTo, Accounts accountFrom, double amount) {
+        transfersDAO.transferMoney(accountFrom.getUsername(),accountTo.getUsername(),amount);
     }
 
     @RequestMapping(path = "accounts/transfers", method = RequestMethod.GET)

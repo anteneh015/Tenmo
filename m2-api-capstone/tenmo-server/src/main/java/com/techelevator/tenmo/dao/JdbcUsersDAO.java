@@ -21,15 +21,27 @@ public class JdbcUsersDAO implements UsersDAO{
     @Override
     public List<Users> getAllUsers() {
         List<Users> usersList = new ArrayList<Users>();
-        String sql = "SELECT user_id, username FROM users";
+        String sql = "SELECT users.user_id AS userid, username, account_id FROM users JOIN accounts ON users.user_id = accounts.user_id";
         SqlRowSet rows = jdbcTemplate.queryForRowSet(sql);
         while (rows.next()) {
             Users users = new Users();
-            users.setUserId(rows.getInt("user_id"));
+            users.setUserId(rows.getInt("userid"));
             users.setUsername(rows.getString("username"));
+            users.setAccountId(rows.getInt("account_id"));
             usersList.add(users);
         }
         return usersList;
+    }
+
+    @Override
+    public int getAccountIdFromUsername(String username) {
+        int accountId = 0;
+        String sql = "SELECT account_id FROM users JOIN accounts ON users.user_id = accounts.user_id WHERE username = ?";
+        SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, username);
+        if (rows.next()) {
+            accountId = rows.getInt("account_id");
+        }
+        return accountId;
     }
 
 

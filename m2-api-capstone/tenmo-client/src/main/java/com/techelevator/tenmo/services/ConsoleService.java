@@ -124,6 +124,10 @@ public class ConsoleService {
 		System.out.println("Please enter a valid amount");
 	}
 
+	public void insufficientFunds() {
+		System.out.println("You do not have enough of a balance to transfer that amount.");
+	}
+
 	public boolean isNumeric(String string){
 		try{
 			Double.parseDouble(string);

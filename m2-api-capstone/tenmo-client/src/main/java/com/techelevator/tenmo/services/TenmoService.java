@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.services;
 
 import com.techelevator.tenmo.auth.models.AuthenticatedUser;
+import com.techelevator.tenmo.models.Accounts;
 import com.techelevator.tenmo.models.Transfers;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -48,14 +49,52 @@ public class TenmoService {
         return usernameList;
     }
 
+    public Transfers addTransfer(Transfers newTransfers) {
+        HttpEntity entity = new HttpEntity<>(makeAuthHeader());
+        String url = this.baseUrl + "accounts/transfers";
+        try {
+            newTransfers = restTemplate.postForObject(url, entity, Transfers.class);
+        } catch (RestClientResponseException ex) {
+            console.printError(ex.getRawStatusCode() + " : " + ex.getStatusText());
+        } catch (ResourceAccessException ex) {
+            console.printError(ex.getMessage());
+        } return newTransfers;
+    }
+
+    public int getAccountIdFromUsername(String username) {
+        HttpEntity entity = new HttpEntity<>(makeAuthHeader());
+        String url = this.baseUrl + "users/" + username + "/accountId";
+        int accountId = 0;
+        try {
+            accountId = restTemplate.exchange(url, HttpMethod.GET, entity, int.class).getBody();
+        } catch (RestClientResponseException ex) {
+            console.printError(ex.getRawStatusCode() + " : " + ex.getStatusText());
+        } catch (ResourceAccessException ex) {
+            console.printError(ex.getMessage());
+        }
+        return accountId;
+    }
+
+    public Accounts updateBalanceAccount(Accounts account, double amount) {
+        account.setBalance(account.getBalance() + amount);
+        HttpEntity<Accounts> entity = new HttpEntity(account, makeAuthHeader());
+
+        String url = this.baseUrl + "accounts/" + account.getOwnerUsername();
+        try{
+            restTemplate.put(url, entity);
+        } catch (RestClientResponseException ex) {
+            console.printError(ex.getRawStatusCode() + " : " + ex.getStatusText());
+        } catch (ResourceAccessException ex) {
+            console.printError(ex.getMessage());
+        }
+        return account;
+    }
+
     private HttpHeaders makeAuthHeader() {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(currentUser.getToken());
         return headers;
     }
 
-    private Transfers createTransfer(){
-        Transfers transfer =
-    }
 
 }

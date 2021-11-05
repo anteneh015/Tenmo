@@ -4,6 +4,7 @@ import com.techelevator.tenmo.auth.models.AuthenticatedUser;
 import com.techelevator.tenmo.auth.models.UserCredentials;
 import com.techelevator.tenmo.auth.services.AuthenticationService;
 import com.techelevator.tenmo.auth.services.AuthenticationServiceException;
+import com.techelevator.tenmo.models.Transfers;
 import com.techelevator.tenmo.services.ConsoleService;
 import com.techelevator.tenmo.services.TenmoService;
 
@@ -101,6 +102,15 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 			if(userConfirmation.equalsIgnoreCase("N")) {
 				break;
 			}
+			Transfers newTransfer = new Transfers(2,2,
+					tenmo.getAccountIdFromUsername(getUsernameTransfer),
+					tenmo.getAccountIdFromUsername(currentUser.getUser().getUsername()), amountToTransfer);
+			tenmo.addTransfer(newTransfer);
+			/*
+			make method to get account from username
+			tenmo.update(currentUser.getUser().getUsername(), amountToTransfer*(-1))
+			tenmo.update(getUsernameTransfer, amountToTransfer)
+			 */
 
 
 	}
@@ -126,7 +136,13 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 			double userInputAsDouble = Double.parseDouble(userInput);
 
 			if(userInputAsDouble > 0){
-				return userInputAsDouble;
+				while(true) {
+					if (userInputAsDouble > tenmo.getAccountBalance()) {
+						console.insufficientFunds();
+						userInput = console.getUserInput("How much would you like to transfer?");
+						userInputAsDouble = Double.parseDouble(userInput);
+					} else {break;}
+				}return userInputAsDouble;
 			}else{
 				console.enterValidAmount();
 				userInput = console.getUserInput("How much would you like to transfer?");

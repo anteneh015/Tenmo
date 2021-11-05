@@ -4,6 +4,15 @@ public class Accounts {
     private double balance;
     private long accountId;
     private long userId;
+    private String ownerUsername;
+
+    public String getOwnerUsername() {
+        return ownerUsername;
+    }
+
+    public void setOwnerUsername(String ownerUsername) {
+        this.ownerUsername = ownerUsername;
+    }
 
     public double getBalance() {
         return balance;
