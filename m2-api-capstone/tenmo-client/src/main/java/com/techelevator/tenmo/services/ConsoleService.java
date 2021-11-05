@@ -123,4 +123,17 @@ public class ConsoleService {
 	public void enterValidAmount(){
 		System.out.println("Please enter a valid amount");
 	}
+
+	public boolean isNumeric(String string){
+		try{
+			Double.parseDouble(string);
+			return true;
+		}catch(NumberFormatException e){
+			return false;
+		}
+	}
+
+	public void invalidTransferAmount(){
+		System.out.println("Invalid amount, please try again.");
+	}
 }

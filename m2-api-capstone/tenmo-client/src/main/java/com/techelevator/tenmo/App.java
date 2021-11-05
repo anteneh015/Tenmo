@@ -96,23 +96,45 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 			if(getUsernameTransfer.equals("0")){
 				break;
 			}
-		getAmountToTransfer();
+		double amountToTransfer = getAmountToTransfer();
+			String userConfirmation = getUserConfirmation(amountToTransfer, getUsernameTransfer);
+			if(userConfirmation.equalsIgnoreCase("N")) {
+				break;
+			}
+
+
 	}
 
 	}
+
+	private String getUserConfirmation(double amountToTransfer, String getUsernameTransfer){
+		String string = console.getUserInput("Are you sure you want to transfer $" + amountToTransfer + " to " + getUsernameTransfer + " (Y/N)");
+
+		while(true) {
+			if (!string.equalsIgnoreCase("Y") && !string.equalsIgnoreCase("N")) {
+				string = console.getUserInput("Are you sure you want to transfer $" + amountToTransfer + " to " + getUsernameTransfer + " (Y/N)");
+			} break;
+		}return string;
+    }
 
 	private double getAmountToTransfer(){
 
 		String userInput = console.getUserInput("How much would you like to transfer?");
-		double userInputAsDouble = Double.parseDouble(userInput);
 
 		while(true){
-		if(userInputAsDouble > 0){
-			return userInputAsDouble;
+		if(console.isNumeric(userInput)){
+			double userInputAsDouble = Double.parseDouble(userInput);
+
+			if(userInputAsDouble > 0){
+				return userInputAsDouble;
+			}else{
+				console.enterValidAmount();
+				userInput = console.getUserInput("How much would you like to transfer?");
+				userInputAsDouble = Double.parseDouble(userInput);
+			}
 		}else{
-			console.enterValidAmount();
-			userInput = console.getUserInput("How much would you like to transfer?");
-			userInputAsDouble = Double.parseDouble(userInput);
+			console.invalidTransferAmount();
+			 userInput = console.getUserInput("How much would you like to transfer?");
 		}
 	}
 

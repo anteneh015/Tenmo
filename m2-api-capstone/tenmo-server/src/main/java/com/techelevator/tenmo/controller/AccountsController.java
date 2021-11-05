@@ -69,4 +69,9 @@ public class AccountsController {
         return null;
     }
 
+    @RequestMapping(path = "accounts/transfers", method = RequestMethod.POST)
+    public Transfers addTransfer(int accountTo, int accountFrom, double transferAmount){
+        return transfersDAO.sendMoneyTransferCreation(accountTo, accountFrom, transferAmount);
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.services;
 
 import com.techelevator.tenmo.auth.models.AuthenticatedUser;
+import com.techelevator.tenmo.models.Transfers;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -52,4 +53,9 @@ public class TenmoService {
         headers.setBearerAuth(currentUser.getToken());
         return headers;
     }
+
+    private Transfers createTransfer(){
+        Transfers transfer =
+    }
+
 }

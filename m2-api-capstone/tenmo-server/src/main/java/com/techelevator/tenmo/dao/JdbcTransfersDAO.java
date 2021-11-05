@@ -80,6 +80,22 @@ public class JdbcTransfersDAO implements TransfersDAO{
         jdbcTemplate.update(sql, balance + transferAmount, accountId);
     }
 
+    @Override
+    public Transfers sendMoneyTransferCreation (int accountTo, int accountFrom, double transferAmount){
+       Transfers transfer = new Transfers();
+        String sql = "INSERT INTO transfers VALUES (default, ?, ? , ?, ?, ?) RETURNING transfer_id";
+        int transferId = jdbcTemplate.queryForObject(sql, int.class, 2, 2, accountFrom, accountTo, transferAmount);
+        transfer.setTransferId(transferId);
+        transfer.setAccountFrom(accountFrom);
+        transfer.setAccountTo(accountTo);
+        transfer.setAmountTransfer(transferAmount);
+        transfer.setStatusId(2);
+        transfer.setTypeId(2);
+        transfer.setTypeDescription("Send");
+        transfer.setStatusDescription("Approved");
+        return transfer;
+    }
+
     private Transfers mapRowToTransfers(SqlRowSet row) {
         Transfers transfer = new Transfers();
         transfer.setAccountFrom(row.getInt("account_from"));
