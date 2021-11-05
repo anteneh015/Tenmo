@@ -55,10 +55,25 @@ public class TenmoService {
         try {
             newTransfers = restTemplate.postForObject(url, entity, Transfers.class);
         } catch (RestClientResponseException ex) {
+//            console.printError("error");
+//        } catch (ResourceAccessException ex) {
+//            console.printError("error");
+        } return newTransfers;
+    }
+
+    public Accounts getAccountFromUsername(String username) {
+        HttpEntity entity= new HttpEntity<>(makeAuthHeader());
+        Accounts accounts = null;
+        String url = this.baseUrl + "accounts?username=" + username;
+        try {
+            accounts = restTemplate.exchange(url, HttpMethod.GET, entity, Accounts.class).getBody();
+
+        } catch (RestClientResponseException ex) {
             console.printError(ex.getRawStatusCode() + " : " + ex.getStatusText());
         } catch (ResourceAccessException ex) {
             console.printError(ex.getMessage());
-        } return newTransfers;
+        }
+        return accounts;
     }
 
     public int getAccountIdFromUsername(String username) {
@@ -75,11 +90,26 @@ public class TenmoService {
         return accountId;
     }
 
-    public Accounts updateBalanceAccount(Accounts account, double amount) {
+    public Accounts addToBalance (Accounts account, double amount) {
         account.setBalance(account.getBalance() + amount);
         HttpEntity<Accounts> entity = new HttpEntity(account, makeAuthHeader());
 
-        String url = this.baseUrl + "accounts/" + account.getOwnerUsername();
+        String url = this.baseUrl + "accounts?username=" + account.getOwnerUsername();
+        try{
+            restTemplate.put(url, entity);
+        } catch (RestClientResponseException ex) {
+            console.printError(ex.getRawStatusCode() + " : " + ex.getStatusText());
+        } catch (ResourceAccessException ex) {
+            console.printError(ex.getMessage());
+        }
+        return account;
+    }
+
+    public Accounts subtractFromBalance (Accounts account, double amount) {
+        account.setBalance(account.getBalance() - amount);
+        HttpEntity<Accounts> entity = new HttpEntity(account, makeAuthHeader());
+
+        String url = this.baseUrl + "accounts?username=" + account.getOwnerUsername();
         try{
             restTemplate.put(url, entity);
         } catch (RestClientResponseException ex) {

@@ -56,17 +56,17 @@ public class JdbcTransfersDAO implements TransfersDAO{
         return transfersList;
     }
 
-    @Transactional
-    @Override
-    public void transferMoney(String usernameFrom, String usernameTo,  double transferAmount) {
-        Accounts accountFrom = accountsDAO.getsAccountsByUsername(usernameFrom);
-        Accounts accountTo = accountsDAO.getsAccountsByUsername(usernameTo);
-
-            withdrawForTransfer(accountFrom.getBalance(), transferAmount, accountFrom.getUserId());
-            depositForTransfer(accountTo.getBalance(), transferAmount, accountTo.getUserId());
-
-
-    }
+//    @Transactional
+//    @Override
+//    public void transferMoney(String usernameFrom, String usernameTo,  double transferAmount) {
+//        Accounts accountFrom = accountsDAO.getsAccountsByUsername(usernameFrom);
+//        Accounts accountTo = accountsDAO.getsAccountsByUsername(usernameTo);
+//
+//            withdrawForTransfer(accountFrom.getBalance(), transferAmount, accountFrom.getUserId());
+//            depositForTransfer(accountTo.getBalance(), transferAmount, accountTo.getUserId());
+//
+//
+//    }
 
     @Override
     public void withdrawForTransfer (double balance, double transferAmount, int accountId) {
@@ -80,20 +80,29 @@ public class JdbcTransfersDAO implements TransfersDAO{
         jdbcTemplate.update(sql, balance + transferAmount, accountId);
     }
 
+//    @Override
+//    public Transfers sendMoneyTransferCreation (int accountTo, int accountFrom, double transferAmount){
+//       Transfers transfer = new Transfers();
+//        String sql = "INSERT INTO transfers VALUES (default, ?, ? , ?, ?, ?) RETURNING transfer_id";
+//        int transferId = jdbcTemplate.queryForObject(sql, int.class, 2, 2, accountFrom, accountTo, transferAmount);
+//        transfer.setTransferId(transferId);
+//        transfer.setAccountFrom(accountFrom);
+//        transfer.setAccountTo(accountTo);
+//        transfer.setAmountTransfer(transferAmount);
+//        transfer.setStatusId(2);
+//        transfer.setTypeId(2);
+//        transfer.setTypeDescription("Send");
+//        transfer.setStatusDescription("Approved");
+//        return transfer;
+//    }
+
     @Override
-    public Transfers sendMoneyTransferCreation (int accountTo, int accountFrom, double transferAmount){
-       Transfers transfer = new Transfers();
+    public Transfers sendMoneyTransferCreation(Transfers transfers) {
         String sql = "INSERT INTO transfers VALUES (default, ?, ? , ?, ?, ?) RETURNING transfer_id";
-        int transferId = jdbcTemplate.queryForObject(sql, int.class, 2, 2, accountFrom, accountTo, transferAmount);
-        transfer.setTransferId(transferId);
-        transfer.setAccountFrom(accountFrom);
-        transfer.setAccountTo(accountTo);
-        transfer.setAmountTransfer(transferAmount);
-        transfer.setStatusId(2);
-        transfer.setTypeId(2);
-        transfer.setTypeDescription("Send");
-        transfer.setStatusDescription("Approved");
-        return transfer;
+        int transferId = jdbcTemplate.queryForObject(sql, int.class, transfers.getTypeId(), transfers.getStatusId(),
+                transfers.getAccountTo(), transfers.getAccountFrom(), transfers.getAmountTransfer());
+        transfers.setTransferId(transferId);
+        return transfers;
     }
 
     private Transfers mapRowToTransfers(SqlRowSet row) {

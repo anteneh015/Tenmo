@@ -7,8 +7,8 @@ import java.util.List;
 public interface AccountsDAO {
 
     public double returnAccountBalance(String username);
-    public Accounts getsAccountsByUsername(String username);
-
+    public List<Accounts> getsAccountsByUsername(String username);
+    public void updateAccountBalance(Accounts accounts);
     public List<Accounts> getAccountsList();
 
 }

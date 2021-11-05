@@ -8,9 +8,9 @@ public interface TransfersDAO {
     public List<Transfers> getPastTransfersFromUserId(int accountId);
     public List<Transfers> getTransfersFromUserId(int accountId);
     public List<Transfers> getCurrentTransfersFromUserId(int accountId);
-    public void transferMoney(String usernameFrom, String usernameTo, double transferAmount);
+//    public void transferMoney(String usernameFrom, String usernameTo, double transferAmount);
     public void withdrawForTransfer (double balance, double transferAmount, int userId);
     public void depositForTransfer (double balance, double transferAmount, int userId);
-    public Transfers sendMoneyTransferCreation (int accountTo, int accountFrom, double transferAmount);
+    public Transfers sendMoneyTransferCreation (Transfers transfers);
 
 }

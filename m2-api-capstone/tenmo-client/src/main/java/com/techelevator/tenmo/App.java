@@ -106,13 +106,9 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 					tenmo.getAccountIdFromUsername(getUsernameTransfer),
 					tenmo.getAccountIdFromUsername(currentUser.getUser().getUsername()), amountToTransfer);
 			tenmo.addTransfer(newTransfer);
-			/*
-			make method to get account from username
-			tenmo.update(currentUser.getUser().getUsername(), amountToTransfer*(-1))
-			tenmo.update(getUsernameTransfer, amountToTransfer)
-			 */
-
-
+			tenmo.addToBalance(tenmo.getAccountFromUsername(getUsernameTransfer), amountToTransfer );
+			tenmo.subtractFromBalance(tenmo.getAccountFromUsername(currentUser.getUser().getUsername()), amountToTransfer);
+			break;
 	}
 
 	}

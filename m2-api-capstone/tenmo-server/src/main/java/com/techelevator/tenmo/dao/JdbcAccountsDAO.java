@@ -27,16 +27,23 @@ public class JdbcAccountsDAO implements AccountsDAO{
         }
         return accounts.getBalance();
     }
+
     @Override
-    public Accounts getsAccountsByUsername(String username){
+    public List<Accounts> getsAccountsByUsername(String username){
+        List<Accounts> accountsList = new ArrayList<Accounts>();
         String sql = "SELECT account_id, balance, username, users.user_id AS user_id " +
                 "FROM accounts JOIN users ON accounts.user_id = users.user_id WHERE username = ?";
         SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, username);
         if (rows.next()){
-            Accounts accounts = mapRowToAccounts(rows);
-            return accounts;
+            accountsList.add(mapRowToAccounts(rows));
         }
-        return null;
+        return accountsList;
+    }
+
+    @Override
+    public void updateAccountBalance(Accounts accounts) {
+        String sql = "UPDATE accounts SET balance = ? WHERE user_id = ?";
+        jdbcTemplate.update(sql, accounts.getBalance(), accounts.getUserId());
     }
 
     @Override

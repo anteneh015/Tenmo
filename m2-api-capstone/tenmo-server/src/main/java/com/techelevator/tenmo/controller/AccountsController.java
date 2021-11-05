@@ -34,15 +34,31 @@ public class AccountsController {
 //    }
 
     @RequestMapping(path = "accounts", method = RequestMethod.GET)
-    public List<Accounts> displayAccounts() {
+    public List<Accounts> displayAccounts(@RequestParam(defaultValue = "") String username) {
         List<Accounts> accountsList = new ArrayList<Accounts>();
-        accountsList = accountsDAO.getAccountsList();
+
+        if (!username.equals("")) {
+            accountsList = accountsDAO.getsAccountsByUsername(username);
+        } else {
+            accountsList = accountsDAO.getAccountsList();
+        }
         return accountsList;
     }
+
+//    @RequestMapping(path = "accounts?username={username}", method = RequestMethod.GET)
+//    public Accounts getAccountFromUsername(@PathVariable String username) {
+//       return accountsDAO.getsAccountsByUsername(username);
+//    }
 
     @RequestMapping(path = "accounts/balance", method = RequestMethod.GET)
     public double getAccountBalance(Principal principal) {
         return accountsDAO.returnAccountBalance(principal.getName());
+    }
+
+    @RequestMapping(path = "accounts?username={username}", method = RequestMethod.PUT)
+    public Accounts updateAccountBalance(@RequestBody Accounts accounts,@PathVariable String username) {
+        accountsDAO.updateAccountBalance(accounts);
+        return accounts;
     }
 
     @RequestMapping(path = "users", method = RequestMethod.GET)
@@ -65,19 +81,19 @@ public class AccountsController {
         return accountId;
     }
 
-    @RequestMapping(path = "accounts", method = RequestMethod.PUT)
-    public void update(Accounts accountTo, Accounts accountFrom, double amount) {
-        transfersDAO.transferMoney(accountFrom.getUsername(),accountTo.getUsername(),amount);
-    }
+//    @RequestMapping(path = "accounts", method = RequestMethod.PUT)
+//    public void update(Accounts accountTo, Accounts accountFrom, double amount) {
+//        transfersDAO.transferMoney(accountFrom.getUsername(),accountTo.getUsername(),amount);
+//    }
 
-    @RequestMapping(path = "accounts/transfers", method = RequestMethod.GET)
+    @RequestMapping(path = "transfers", method = RequestMethod.GET)
     public List<Transfers> getTransfersFromAccountId(@RequestBody Accounts accounts) {
         List<Transfers> transfersList = new ArrayList<Transfers>();
         transfersList = transfersDAO.getTransfersFromUserId(accounts.getAccountId());
         return transfersList;
     }
 
-    @RequestMapping(path = "accounts/transfers/{transfer_status_id}", method = RequestMethod.GET)
+    @RequestMapping(path = "transfers/{transfer_status_id}", method = RequestMethod.GET)
     public List<Transfers> getTransferListFromTransferStatusId(@PathVariable int transfer_status_id,@RequestBody Accounts accounts) {
         if(transfer_status_id == 2 || transfer_status_id == 3) {
             return transfersDAO.getPastTransfersFromUserId(accounts.getAccountId());
@@ -87,9 +103,14 @@ public class AccountsController {
         return null;
     }
 
-    @RequestMapping(path = "accounts/transfers", method = RequestMethod.POST)
-    public Transfers addTransfer(int accountTo, int accountFrom, double transferAmount){
-        return transfersDAO.sendMoneyTransferCreation(accountTo, accountFrom, transferAmount);
+//    @RequestMapping(path = "transfers", method = RequestMethod.POST)
+//    public Transfers addTransfer(int accountTo, int accountFrom, double transferAmount){
+//        return transfersDAO.sendMoneyTransferCreation(accountTo, accountFrom, transferAmount);
+//    }
+
+    @RequestMapping(path = "transfers", method = RequestMethod.POST)
+    public Transfers addTransfer(@RequestBody Transfers transfers) {
+        return transfersDAO.sendMoneyTransferCreation(transfers);
     }
 
 }
