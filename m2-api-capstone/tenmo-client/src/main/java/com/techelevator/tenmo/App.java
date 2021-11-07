@@ -80,7 +80,12 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	private void viewTransferHistory() {
 		// TODO Auto-generated method stub
 		List<Transfers> transfersList = tenmo.getTransfersFromAccountId(tenmo.getAccountIdFromUsername(currentUser.getUser().getUsername()));
-		console.displayTransfers(transfersList);
+		console.transferDisplayMenuStart();
+		for (Transfers eachTransfer : transfersList) {
+			console.displayTransfer(eachTransfer);
+		}
+		console.transferDisplayMenuEnd();
+//		console.displayTransfers(transfersList);
 	}
 
 	private void viewPendingRequests() {

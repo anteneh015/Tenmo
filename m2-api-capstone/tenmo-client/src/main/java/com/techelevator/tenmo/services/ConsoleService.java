@@ -125,14 +125,28 @@ public class ConsoleService {
 		System.out.println("------------------------------------\n");
 	}
 
-	public void displayTransfers(List<Transfers> transfersList) {
+//	public void displayTransfers(List<Transfers> transfersList) {
+//		System.out.println("Transfers:");
+//		System.out.printf("%-10s | %-20s | %-20s | %-20s \n", "ID", "Account sent from", "Account sent to","Amount");
+//		System.out.println("-------------------------------------------------------------------------------");
+//		for (Transfers eachTransfer: transfersList) {
+//			System.out.printf("%-10s | %-20s | %-20s | %-20s \n", eachTransfer.getTransferId(), eachTransfer.getAccountFrom(), eachTransfer.getAccountTo(), "$" + eachTransfer.getAmountTransfer());
+//		}
+//		System.out.println("-------------------------------------------------------------------------------");
+//	}
+
+	public void transferDisplayMenuStart() {
 		System.out.println("Transfers:");
-		System.out.printf("%-10s | %25s | %-20s \n", "ID", "From/To", "Amount");
-		System.out.println("-----------------------------------------------------------");
-		for (Transfers eachTransfer: transfersList) {
-			System.out.printf("%-10s | %25s | %-20s \n", eachTransfer.getTransferId(), tenmo.,eachTransfer.getAccountFrom(), eachTransfer.getAccountTo(), eachTransfer.getAmountTransfer());
-		}
-		System.out.println("-----------------------------------------------------------");
+		System.out.printf("%-10s | %-20s | %-20s | %-20s \n", "ID", "Account sent from", "Account sent to","Amount");
+		System.out.println("-------------------------------------------------------------------------------");
+	}
+	public void transferDisplayMenuEnd() {
+		System.out.println("-------------------------------------------------------------------------------");
+		System.out.println();
+	}
+
+	public void displayTransfer(Transfers transfers) {
+		System.out.printf("%-10s | %-20s | %-20s | %-20s \n", transfers.getTransferId(), transfers.getAccountFrom(), transfers.getAccountTo(), "$" + transfers.getAmountTransfer());
 	}
 
 	public void usernameNotFound() {

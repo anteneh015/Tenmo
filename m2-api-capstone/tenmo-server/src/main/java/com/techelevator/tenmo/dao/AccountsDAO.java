@@ -11,6 +11,6 @@ public interface AccountsDAO {
     public void updateAccountBalance(Accounts accounts);
     public List<Accounts> getAccountsList();
     public String getUserFromAccountId(int accountId);
-    public Accounts getAccountsById(int accountId);
+    public List<Accounts> getAccountsById(int accountId);
 
 }

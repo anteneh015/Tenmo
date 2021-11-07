@@ -2,16 +2,16 @@ package com.techelevator.tenmo.models;
 
 public class Accounts {
     private double balance;
-    private long accountId;
-    private long userId;
-    private String ownerUsername;
+    private int accountId;
+    private int userId;
+    private String username;
 
     public String getOwnerUsername() {
-        return ownerUsername;
+        return username;
     }
 
     public void setOwnerUsername(String ownerUsername) {
-        this.ownerUsername = ownerUsername;
+        this.username = ownerUsername;
     }
 
     public double getBalance() {
@@ -22,19 +22,19 @@ public class Accounts {
         this.balance = balance;
     }
 
-    public long getAccountId() {
+    public int getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(long accountId) {
+    public void setAccountId(int accountId) {
         this.accountId = accountId;
     }
 
-    public long getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 }

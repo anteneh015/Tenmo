@@ -34,27 +34,26 @@ public class AccountsController {
 //    }
 
     @RequestMapping(path = "accounts", method = RequestMethod.GET)
-    public List<Accounts> displayAccounts(@RequestParam(defaultValue = "") String username) {
+    public List<Accounts> displayAccounts(@RequestParam(defaultValue = "") String username, @RequestParam(defaultValue = "0") int accountId) {
         List<Accounts> accountsList = new ArrayList<Accounts>();
 
-        if (!username.equals("")) {
+        if (!username.equals("") && accountId == 0) {
             accountsList = accountsDAO.getsAccountsByUsername(username);
+        }else if (username.equals("") && accountId != 0) {
+            accountsList = accountsDAO.getAccountsById(accountId);
         } else {
                 accountsList = accountsDAO.getAccountsList();
             }
         return accountsList;
         }
-        //, @RequestParam(defaultValue = "0") int accountId
-//    else if (username.equals("") && accountId != 0) {
-//        accountsList = accountsDAO.getAccountsById(accountId);
-//    }
 
-    @RequestMapping(path = "accounts/{id}", method = RequestMethod.GET)
-        public Accounts getAccountFromAccountId(@PathVariable int accountId) {
-        Accounts accounts = new Accounts();
-        accounts = accountsDAO.getAccountsById(accountId);
-        return accounts;
-        }
+
+
+//    @RequestMapping(path = "accounts/username?accountId={accountId}", method = RequestMethod.GET)
+//        public String getAccountFromAccountId(@PathVariable int accountId) {
+//        String username = accountsDAO.getUserFromAccountId(accountId);
+//        return username;
+//        }
 
 
     @RequestMapping(path = "accounts/balance", method = RequestMethod.GET)
@@ -62,7 +61,7 @@ public class AccountsController {
         return accountsDAO.returnAccountBalance(principal.getName());
     }
 
-    @RequestMapping(path = "accounts/{id}/username", method = RequestMethod.GET)
+    @RequestMapping(path = "accounts/username", method = RequestMethod.GET)
     public String getUsernameFromAccountId(@PathVariable int accountId) {
         String username = null;
         username = accountsDAO.getUserFromAccountId(accountId);

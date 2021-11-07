@@ -113,17 +113,34 @@ public class TenmoService {
         return account;
     }
 
-    public String getUsernameFromAccountId (int accountId) {
-        String username = null;
-        HttpEntity entity = new HttpEntity<>(makeAuthHeader());
-        String url = this.baseUrl + "accounts/" + accountId + "/username";
-        try{
-            username = restTemplate.exchange(url, HttpMethod.GET, entity, String.class).getBody();
-        } catch (RestClientResponseException ex) {
+//    public String getUsernameFromAccountId (int accountId) {
+//        String username = null;
+//        HttpEntity entity = new HttpEntity<>(makeAuthHeader());
+//        String url = this.baseUrl + "accounts?accountId=" + accountId;
+//        try{
+//            Accounts[] accounts = restTemplate.exchange(url, HttpMethod.GET, entity, Accounts[].class).getBody();
+//            username = accounts[0].getOwnerUsername();
+//        } catch (RestClientResponseException ex) {
+//
+//        }
+//        return username;
+//    }
 
-        }
-        return null;
-    }
+//    public String getUsernameFromAccountId (int accountId) {
+//        String username = null;
+//        HttpHeaders headers = makeAuthHeader();
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//        HttpEntity entity = new HttpEntity<>(headers);
+//        try{
+//            String url = this.baseUrl + "accounts?accountId=" + accountId;
+//            Accounts[] accounts = restTemplate.exchange(url, HttpMethod.GET, entity, Accounts[].class).getBody();
+//            Accounts account = accounts[0];
+//            username = account.getOwnerUsername();
+//        }catch (RestClientResponseException ex) {
+//
+//        }
+//        return username;
+//    }
 
     public List<Transfers> getTransfersFromAccountId(int id) {
         HttpEntity entity = new HttpEntity<>(makeAuthHeader());
