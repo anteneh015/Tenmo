@@ -7,6 +7,7 @@ import com.techelevator.tenmo.auth.services.AuthenticationServiceException;
 import com.techelevator.tenmo.models.Transfers;
 import com.techelevator.tenmo.services.ConsoleService;
 import com.techelevator.tenmo.services.TenmoService;
+import io.cucumber.java.eo.Do;
 
 import java.util.List;
 
@@ -85,7 +86,6 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 			console.displayTransfer(eachTransfer);
 		}
 		console.transferDisplayMenuEnd();
-//		console.displayTransfers(transfersList);
 	}
 
 	private void viewPendingRequests() {
@@ -95,7 +95,6 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 
 	private void sendBucks() {
 		// TODO Auto-generated method stub
-
 		while (true){
 			String[] usernames = tenmo.getUsernames();
 
@@ -118,7 +117,6 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 			tenmo.subtractFromBalance(tenmo.getAccountFromUsername(currentUser.getUser().getUsername()), amountToTransfer);
 			break;
 	}
-
 	}
 
 	private String getUserConfirmation(double amountToTransfer, String getUsernameTransfer){

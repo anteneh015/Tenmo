@@ -28,11 +28,6 @@ public class AccountsController {
         this.transfersDAO = transfersDAO;
     }
 
-//    @RequestMapping(path = "accounts", method = RequestMethod.GET)
-//    public Accounts displayAccount(Principal principal) {
-//        return accountsDAO.getsAccountsByUsername(principal.getName());
-//    }
-
     @RequestMapping(path = "accounts", method = RequestMethod.GET)
     public List<Accounts> displayAccounts(@RequestParam(defaultValue = "") String username, @RequestParam(defaultValue = "0") int accountId) {
         List<Accounts> accountsList = new ArrayList<Accounts>();
@@ -46,15 +41,6 @@ public class AccountsController {
             }
         return accountsList;
         }
-
-
-
-//    @RequestMapping(path = "accounts/username?accountId={accountId}", method = RequestMethod.GET)
-//        public String getAccountFromAccountId(@PathVariable int accountId) {
-//        String username = accountsDAO.getUserFromAccountId(accountId);
-//        return username;
-//        }
-
 
     @RequestMapping(path = "accounts/balance", method = RequestMethod.GET)
     public double getAccountBalance(Principal principal) {
@@ -94,13 +80,6 @@ public class AccountsController {
         int accountId = usersDAO.getAccountIdFromUsername(username);
         return accountId;
     }
-
-//    @RequestMapping(path = "transfers", method = RequestMethod.GET)
-//    public List<Transfers> getTransfersFromAccountId(@RequestParam(defaultValue = "") int id) {
-//        List<Transfers> transfersList = new ArrayList<Transfers>();
-//        transfersList = transfersDAO.getTransfersFromUserId(accounts.getAccountId());
-//        return transfersList;
-//    }
 
     @RequestMapping(path = "transfers", method = RequestMethod.GET)
     public List<Transfers> getListOfTransfers(@RequestParam(defaultValue = "0") int accountTo, @RequestParam(defaultValue = "0") int accountFrom) {

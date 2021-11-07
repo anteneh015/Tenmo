@@ -16,7 +16,6 @@ public class ConsoleService {
 
 	private PrintWriter out;
 	private Scanner in;
-	private TenmoService tenmo;
 
 	public ConsoleService(InputStream input, OutputStream output) {
 		this.out = new PrintWriter(output, true);
@@ -125,28 +124,19 @@ public class ConsoleService {
 		System.out.println("------------------------------------\n");
 	}
 
-//	public void displayTransfers(List<Transfers> transfersList) {
-//		System.out.println("Transfers:");
-//		System.out.printf("%-10s | %-20s | %-20s | %-20s \n", "ID", "Account sent from", "Account sent to","Amount");
-//		System.out.println("-------------------------------------------------------------------------------");
-//		for (Transfers eachTransfer: transfersList) {
-//			System.out.printf("%-10s | %-20s | %-20s | %-20s \n", eachTransfer.getTransferId(), eachTransfer.getAccountFrom(), eachTransfer.getAccountTo(), "$" + eachTransfer.getAmountTransfer());
-//		}
-//		System.out.println("-------------------------------------------------------------------------------");
-//	}
-
 	public void transferDisplayMenuStart() {
 		System.out.println("Transfers:");
-		System.out.printf("%-10s | %-20s | %-20s | %-20s \n", "ID", "Account sent from", "Account sent to","Amount");
-		System.out.println("-------------------------------------------------------------------------------");
+		System.out.printf("%-10s | %-20s | %-20s | %-10s | %-10s | %-20s \n", "ID", "Account sent from", "Account sent to", "Type", "Status", "Amount");
+		System.out.println("---------------------------------------------------------------------------------------------------------");
 	}
 	public void transferDisplayMenuEnd() {
-		System.out.println("-------------------------------------------------------------------------------");
+		System.out.println("---------------------------------------------------------------------------------------------------------");
 		System.out.println();
 	}
 
 	public void displayTransfer(Transfers transfers) {
-		System.out.printf("%-10s | %-20s | %-20s | %-20s \n", transfers.getTransferId(), transfers.getAccountFrom(), transfers.getAccountTo(), "$" + transfers.getAmountTransfer());
+		System.out.printf("%-10s | %-20s | %-20s | %-10s | %-10s | %-20s \n", transfers.getTransferId(), transfers.getAccountFrom(), transfers.getAccountTo(),
+				transfers.getTypeDescription(), transfers.getStatusDescription(), "$" + transfers.getAmountTransfer());
 	}
 
 	public void usernameNotFound() {
