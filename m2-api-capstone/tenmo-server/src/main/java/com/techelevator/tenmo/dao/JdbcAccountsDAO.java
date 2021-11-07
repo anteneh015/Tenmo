@@ -58,7 +58,30 @@ public class JdbcAccountsDAO implements AccountsDAO{
         return accountsList;
     }
 
+    @Override
+    public Accounts getAccountsById(int accountId) {
+        Accounts accounts = new Accounts();
+//        List<Accounts> accountsList = new ArrayList<Accounts>();
+        String sql = "SELECT account_id, balance, username, users.user_id AS user_id FROM accounts JOIN users ON accounts.user_id = users.user_id WHERE account_id = ?";
+        SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, accountId);
+        while (rows.next()) {
+//            accountsList.add(mapRowToAccounts(rows));
+            accounts = mapRowToAccounts(rows);
+        }
+//        return accountsList;
+        return accounts;
+    }
 
+    @Override
+    public String getUserFromAccountId(int accountId) {
+        String username = null;
+        String sql = "SELECT username FROM users JOIN accounts ON users.user_id = accounts.user_id WHERE account_id = ?";
+        SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, accountId);
+        while (rows.next()) {
+            username = rows.getString("username");
+        }
+        return username;
+    }
 
 
 

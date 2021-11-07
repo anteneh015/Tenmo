@@ -40,15 +40,35 @@ public class AccountsController {
         if (!username.equals("")) {
             accountsList = accountsDAO.getsAccountsByUsername(username);
         } else {
-            accountsList = accountsDAO.getAccountsList();
-        }
+                accountsList = accountsDAO.getAccountsList();
+            }
         return accountsList;
-    }
+        }
+        //, @RequestParam(defaultValue = "0") int accountId
+//    else if (username.equals("") && accountId != 0) {
+//        accountsList = accountsDAO.getAccountsById(accountId);
+//    }
+
+    @RequestMapping(path = "accounts/{id}", method = RequestMethod.GET)
+        public Accounts getAccountFromAccountId(@PathVariable int accountId) {
+        Accounts accounts = new Accounts();
+        accounts = accountsDAO.getAccountsById(accountId);
+        return accounts;
+        }
+
 
     @RequestMapping(path = "accounts/balance", method = RequestMethod.GET)
     public double getAccountBalance(Principal principal) {
         return accountsDAO.returnAccountBalance(principal.getName());
     }
+
+    @RequestMapping(path = "accounts/{id}/username", method = RequestMethod.GET)
+    public String getUsernameFromAccountId(@PathVariable int accountId) {
+        String username = null;
+        username = accountsDAO.getUserFromAccountId(accountId);
+        return username;
+    }
+
 
     @RequestMapping(path = "accounts/{id}", method = RequestMethod.PUT)
     public Accounts updateAccountBalance(@RequestBody Accounts accounts,@PathVariable int id) {

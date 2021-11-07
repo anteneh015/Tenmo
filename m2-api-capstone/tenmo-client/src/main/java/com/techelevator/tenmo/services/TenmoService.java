@@ -113,9 +113,16 @@ public class TenmoService {
         return account;
     }
 
-    public String getUsernameFromAccountId (int id) {
+    public String getUsernameFromAccountId (int accountId) {
+        String username = null;
+        HttpEntity entity = new HttpEntity<>(makeAuthHeader());
+        String url = this.baseUrl + "accounts/" + accountId + "/username";
+        try{
+            username = restTemplate.exchange(url, HttpMethod.GET, entity, String.class).getBody();
+        } catch (RestClientResponseException ex) {
 
-        
+        }
+        return null;
     }
 
     public List<Transfers> getTransfersFromAccountId(int id) {
