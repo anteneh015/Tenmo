@@ -10,13 +10,14 @@ public class Transfers {
     private String typeDescription;
     private String statusDescription;
 
+    public Transfers() {};
+
     public Transfers(int typeId, int statusId, int accountTo, int accountFrom, double amountTransfer){
         this.typeId = typeId;
         this.statusId = statusId;
         this.accountTo = accountTo;
         this.accountFrom = accountFrom;
         this.amountTransfer = amountTransfer;
-        
     }
 
     public int getTransferId() {

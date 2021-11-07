@@ -1,17 +1,22 @@
 package com.techelevator.tenmo.services;
 
 
+import com.techelevator.tenmo.models.Transfers;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.TransferQueue;
 import java.util.concurrent.atomic.DoubleAccumulator;
 
 public class ConsoleService {
 
 	private PrintWriter out;
 	private Scanner in;
+	private TenmoService tenmo;
 
 	public ConsoleService(InputStream input, OutputStream output) {
 		this.out = new PrintWriter(output, true);
@@ -105,7 +110,10 @@ public class ConsoleService {
 	}
 
 	public void printOutBalance(double viewBalance){
+		System.out.println("User Account Balance:");
+		System.out.println("------------------------");
 		System.out.println("$" + viewBalance);
+		System.out.println("------------------------");
 	}
 
 	public void displayUsernames(String[] usernameArray) {
@@ -114,18 +122,32 @@ public class ConsoleService {
 		for (String eachString : usernameArray) {
 			System.out.println(eachString);
 		}
+		System.out.println("------------------------------------\n");
+	}
+
+	public void displayTransfers(List<Transfers> transfersList) {
+		System.out.println("Transfers:");
+		System.out.printf("%-10s | %25s | %-20s \n", "ID", "From/To", "Amount");
+		System.out.println("-----------------------------------------------------------");
+		for (Transfers eachTransfer: transfersList) {
+			System.out.printf("%-10s | %25s | %-20s \n", eachTransfer.getTransferId(), tenmo.,eachTransfer.getAccountFrom(), eachTransfer.getAccountTo(), eachTransfer.getAmountTransfer());
+		}
+		System.out.println("-----------------------------------------------------------");
 	}
 
 	public void usernameNotFound() {
-		System.out.println("Username not found, please enter a valid one");
+		System.out.println("");
+		System.out.println("Username not found, please enter a valid one.\n");
 	}
 
-	public void enterValidAmount(){
-		System.out.println("Please enter a valid amount");
+	public void enterValidEntry(){
+		System.out.println("");
+		System.out.println("Please enter a valid entry.\n");
 	}
 
 	public void insufficientFunds() {
-		System.out.println("You do not have enough of a balance to transfer that amount.");
+		System.out.println("");
+		System.out.println("You do not have enough of a balance to transfer that amount.\n");
 	}
 
 	public boolean isNumeric(String string){
@@ -138,6 +160,7 @@ public class ConsoleService {
 	}
 
 	public void invalidTransferAmount(){
-		System.out.println("Invalid amount, please try again.");
+		System.out.println("");
+		System.out.println("Invalid amount, please try again.\n");
 	}
 }

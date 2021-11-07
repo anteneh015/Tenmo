@@ -21,11 +21,11 @@ public class JdbcTransfersDAO implements TransfersDAO{
     }
 
     @Override
-    public List<Transfers> getTransfersFromUserId(int accountId) {
+    public List<Transfers> getTransfersFromAccountFromId(int accountId) {
         List<Transfers> transfersList = new ArrayList<Transfers>();
         String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount FROM transfers " +
-                "WHERE account_from = ? OR account_to = ?";
-        SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, accountId, accountId);
+                "WHERE account_from = ?";
+        SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, accountId);
         while (rows.next()) {
             transfersList.add(mapRowToTransfers(rows));
         }
@@ -33,11 +33,11 @@ public class JdbcTransfersDAO implements TransfersDAO{
     }
 
     @Override
-    public List<Transfers> getPastTransfersFromUserId(int accountId) {
+    public List<Transfers> getTransfersFromAccountToId(int accountId) {
         List<Transfers> transfersList = new ArrayList<Transfers>();
         String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount FROM transfers " +
-                "WHERE (account_from = ? OR account_to = ?) AND transfer_status_id IN(2, 3)";
-        SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, accountId, accountId);
+                "WHERE account_to = ?";
+        SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, accountId);
         while (rows.next()) {
             transfersList.add(mapRowToTransfers(rows));
         }
@@ -45,16 +45,41 @@ public class JdbcTransfersDAO implements TransfersDAO{
     }
 
     @Override
-    public List<Transfers> getCurrentTransfersFromUserId(int accountId) {
+    public List<Transfers> getAllTransfers() {
         List<Transfers> transfersList = new ArrayList<Transfers>();
-        String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount FROM transfers " +
-                "WHERE (account_from = ? OR account_to = ?) AND transfer_status_id = 1";
-        SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, accountId, accountId);
+        String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount FROM transfers ";
+        SqlRowSet rows = jdbcTemplate.queryForRowSet(sql);
         while (rows.next()) {
             transfersList.add(mapRowToTransfers(rows));
         }
         return transfersList;
     }
+
+    //TODO: non-mvp
+//    @Override
+//    public List<Transfers> getPastTransfersFromUserId(int accountId) {
+//        List<Transfers> transfersList = new ArrayList<Transfers>();
+//        String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount FROM transfers " +
+//                "WHERE (account_from = ? OR account_to = ?) AND transfer_status_id IN(2, 3)";
+//        SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, accountId, accountId);
+//        while (rows.next()) {
+//            transfersList.add(mapRowToTransfers(rows));
+//        }
+//        return transfersList;
+//    }
+
+    //TODO: non-mvp
+//    @Override
+//    public List<Transfers> getCurrentTransfersFromUserId(int accountId) {
+//        List<Transfers> transfersList = new ArrayList<Transfers>();
+//        String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount FROM transfers " +
+//                "WHERE (account_from = ? OR account_to = ?) AND transfer_status_id = 1";
+//        SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, accountId, accountId);
+//        while (rows.next()) {
+//            transfersList.add(mapRowToTransfers(rows));
+//        }
+//        return transfersList;
+//    }
 
 //    @Transactional
 //    @Override
@@ -100,7 +125,7 @@ public class JdbcTransfersDAO implements TransfersDAO{
     public Transfers sendMoneyTransferCreation(Transfers transfers) {
         String sql = "INSERT INTO transfers VALUES (default, ?, ? , ?, ?, ?) RETURNING transfer_id";
         int transferId = jdbcTemplate.queryForObject(sql, int.class, transfers.getTypeId(), transfers.getStatusId(),
-                transfers.getAccountTo(), transfers.getAccountFrom(), transfers.getAmountTransfer());
+                transfers.getAccountFrom(), transfers.getAccountTo(), transfers.getAmountTransfer());
         transfers.setTransferId(transferId);
         return transfers;
     }

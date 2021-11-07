@@ -3,14 +3,17 @@ package com.techelevator.tenmo.services;
 import com.techelevator.tenmo.auth.models.AuthenticatedUser;
 import com.techelevator.tenmo.models.Accounts;
 import com.techelevator.tenmo.models.Transfers;
+import io.cucumber.java.bs.A;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TenmoService {
@@ -32,9 +35,6 @@ public class TenmoService {
         try {
             balance = restTemplate.exchange(url, HttpMethod.GET, entity, double.class).getBody();
         } catch (RestClientResponseException ex) {
-            console.printError(ex.getRawStatusCode() + " : " + ex.getStatusText());
-        } catch (ResourceAccessException ex) {
-            console.printError(ex.getMessage());
         }
         return balance;
     }
@@ -50,28 +50,25 @@ public class TenmoService {
     }
 
     public Transfers addTransfer(Transfers newTransfers) {
-        HttpEntity entity = new HttpEntity<>(makeAuthHeader());
-        String url = this.baseUrl + "accounts/transfers";
+        HttpHeaders headers = makeAuthHeader();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Accounts> entity = new HttpEntity(newTransfers, headers);
+        String url = this.baseUrl + "transfers";
         try {
             newTransfers = restTemplate.postForObject(url, entity, Transfers.class);
         } catch (RestClientResponseException ex) {
-//            console.printError("error");
-//        } catch (ResourceAccessException ex) {
-//            console.printError("error");
         } return newTransfers;
     }
 
     public Accounts getAccountFromUsername(String username) {
-        HttpEntity entity= new HttpEntity<>(makeAuthHeader());
+        HttpEntity entity = new HttpEntity<>(makeAuthHeader());
         Accounts accounts = null;
         String url = this.baseUrl + "accounts?username=" + username;
         try {
-            accounts = restTemplate.exchange(url, HttpMethod.GET, entity, Accounts.class).getBody();
-
+            Accounts[] accountsArray = restTemplate.exchange(url, HttpMethod.GET, entity, Accounts[].class).getBody();
+            accounts = accountsArray[0];
+            accounts.setOwnerUsername(username);
         } catch (RestClientResponseException ex) {
-            console.printError(ex.getRawStatusCode() + " : " + ex.getStatusText());
-        } catch (ResourceAccessException ex) {
-            console.printError(ex.getMessage());
         }
         return accounts;
     }
@@ -83,42 +80,65 @@ public class TenmoService {
         try {
             accountId = restTemplate.exchange(url, HttpMethod.GET, entity, int.class).getBody();
         } catch (RestClientResponseException ex) {
-            console.printError(ex.getRawStatusCode() + " : " + ex.getStatusText());
-        } catch (ResourceAccessException ex) {
-            console.printError(ex.getMessage());
+
         }
         return accountId;
     }
 
     public Accounts addToBalance (Accounts account, double amount) {
         account.setBalance(account.getBalance() + amount);
-        HttpEntity<Accounts> entity = new HttpEntity(account, makeAuthHeader());
+        HttpHeaders headers = makeAuthHeader();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Accounts> entity = new HttpEntity(account, headers);
 
-        String url = this.baseUrl + "accounts?username=" + account.getOwnerUsername();
+        String url = this.baseUrl + "accounts/" + account.getAccountId();
         try{
             restTemplate.put(url, entity);
         } catch (RestClientResponseException ex) {
-            console.printError(ex.getRawStatusCode() + " : " + ex.getStatusText());
-        } catch (ResourceAccessException ex) {
-            console.printError(ex.getMessage());
         }
         return account;
     }
 
     public Accounts subtractFromBalance (Accounts account, double amount) {
         account.setBalance(account.getBalance() - amount);
-        HttpEntity<Accounts> entity = new HttpEntity(account, makeAuthHeader());
+        HttpHeaders headers = makeAuthHeader();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Accounts> entity = new HttpEntity(account, headers);
 
-        String url = this.baseUrl + "accounts?username=" + account.getOwnerUsername();
+        String url = this.baseUrl + "accounts/" + account.getAccountId();
         try{
             restTemplate.put(url, entity);
         } catch (RestClientResponseException ex) {
-            console.printError(ex.getRawStatusCode() + " : " + ex.getStatusText());
-        } catch (ResourceAccessException ex) {
-            console.printError(ex.getMessage());
         }
         return account;
     }
+
+    public String getUsernameFromAccountId (int id) {
+
+        
+    }
+
+    public List<Transfers> getTransfersFromAccountId(int id) {
+        HttpEntity entity = new HttpEntity<>(makeAuthHeader());
+        Transfers[] transfersFirst = null;
+        String urlOne = this.baseUrl + "transfers?accountFrom=" + id;
+        transfersFirst = restTemplate.exchange(urlOne, HttpMethod.GET, entity, Transfers[].class).getBody();
+        Transfers[] transfersSecond = null;
+        String urlTwo = this.baseUrl + "transfers?accountTo=" + id;
+        transfersSecond = restTemplate.exchange(urlTwo, HttpMethod.GET, entity, Transfers[].class).getBody();
+        List<Transfers> transfersList = new ArrayList<Transfers>();
+        transfersList.addAll(Arrays.asList(transfersFirst));
+        transfersList.addAll(Arrays.asList(transfersSecond));
+        return transfersList;
+    }
+//    String[] usernameList = null;
+//    HttpEntity entity = new HttpEntity<>(makeAuthHeader());
+//    String url = this.baseUrl + "users/usernames";
+//
+//    usernameList = restTemplate.exchange(url, HttpMethod.GET, entity, String[].class).getBody();
+//
+//        return usernameList;
+//}
 
     private HttpHeaders makeAuthHeader() {
         HttpHeaders headers = new HttpHeaders();

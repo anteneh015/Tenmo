@@ -8,6 +8,8 @@ import com.techelevator.tenmo.models.Transfers;
 import com.techelevator.tenmo.services.ConsoleService;
 import com.techelevator.tenmo.services.TenmoService;
 
+import java.util.List;
+
 public class App {
 
 private static final String API_BASE_URL = "http://localhost:8080/";
@@ -77,7 +79,8 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 
 	private void viewTransferHistory() {
 		// TODO Auto-generated method stub
-		
+		List<Transfers> transfersList = tenmo.getTransfersFromAccountId(tenmo.getAccountIdFromUsername(currentUser.getUser().getUsername()));
+		console.displayTransfers(transfersList);
 	}
 
 	private void viewPendingRequests() {
@@ -118,38 +121,33 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 
 		while(true) {
 			if (!string.equalsIgnoreCase("Y") && !string.equalsIgnoreCase("N")) {
+				console.enterValidEntry();
 				string = console.getUserInput("Are you sure you want to transfer $" + amountToTransfer + " to " + getUsernameTransfer + " (Y/N)");
-			} break;
+			} else {
+				break;
+			}
 		}return string;
     }
 
-	private double getAmountToTransfer(){
-
+	private double getAmountToTransfer() {
 		String userInput = console.getUserInput("How much would you like to transfer?");
-
-		while(true){
-		if(console.isNumeric(userInput)){
-			double userInputAsDouble = Double.parseDouble(userInput);
-
-			if(userInputAsDouble > 0){
-				while(true) {
-					if (userInputAsDouble > tenmo.getAccountBalance()) {
-						console.insufficientFunds();
-						userInput = console.getUserInput("How much would you like to transfer?");
-						userInputAsDouble = Double.parseDouble(userInput);
-					} else {break;}
-				}return userInputAsDouble;
-			}else{
-				console.enterValidAmount();
+		while (true) {
+			if (!console.isNumeric(userInput)) {
+				console.invalidTransferAmount();
 				userInput = console.getUserInput("How much would you like to transfer?");
-				userInputAsDouble = Double.parseDouble(userInput);
+			} else {
+				double userInputAsDouble = Double.parseDouble(userInput);
+				if (userInputAsDouble <= 0) {
+					console.invalidTransferAmount();
+					userInput = console.getUserInput("How much would you like to transfer?");
+				} else if (userInputAsDouble > tenmo.getAccountBalance()) {
+					console.insufficientFunds();
+					userInput = console.getUserInput("How much would you like to transfer?");
+				} else {
+					return userInputAsDouble;
+				}
 			}
-		}else{
-			console.invalidTransferAmount();
-			 userInput = console.getUserInput("How much would you like to transfer?");
 		}
-	}
-
 	}
 
 	private String getUsernameToTransferTo(String[] usernames) {
