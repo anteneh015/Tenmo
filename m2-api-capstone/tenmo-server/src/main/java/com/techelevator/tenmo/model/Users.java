@@ -4,6 +4,7 @@ public class Users {
     private String username;
     private int userId;
     private int accountId;
+    private String passHash;
 
     public int getAccountId() {
         return accountId;
@@ -11,6 +12,14 @@ public class Users {
 
     public void setAccountId(int accountId) {
         this.accountId = accountId;
+    }
+
+    public String getPassHash() {
+        return passHash;
+    }
+
+    public void setPassHash(String passHash) {
+        this.passHash = passHash;
     }
 
     public String getUsername() {
